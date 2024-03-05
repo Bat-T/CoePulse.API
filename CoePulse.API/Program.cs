@@ -2,6 +2,7 @@ using CoePulse.API.Data;
 using CoePulse.API.Repositories.Implementation;
 using CoePulse.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseConnectionString"));
 });
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IBlogPostsRepository,BlogPostsRepository>();
 
@@ -43,6 +46,12 @@ app.MapMethods("/path", new[] { "OPTIONS" }, (context) =>
     context.Response.Headers.Append("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
     context.Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     return Task.CompletedTask;
+});
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images"
 });
 
 app.MapControllers();
