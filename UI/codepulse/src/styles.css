@@ -9,3 +9,8 @@
     padding: 50px;
     background-color: rgb(0,0,0,0.5);
 }
+
+.blog-container img{
+    max-width: 100px; ;
+    margin: 2 em 0 2em 0;
+}
