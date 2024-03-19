@@ -27,7 +27,7 @@ namespace CoePulse.API.Controllers
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = "Writer")]
+        [Authorize(Roles = "Writer,Admin")]
         public async Task<ActionResult<CategoryDTO>> PostCategory(CreateCategoryRequestDTO request)
         {
             var category = new Category { Name = request.Name, UrlHandle = request.UrlHandle };
@@ -65,7 +65,7 @@ namespace CoePulse.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        [Authorize(Roles = "Writer")]
+        [Authorize(Roles = "Writer,Admin")]
         public async Task<ActionResult<CategoryDTO>> EditCategory([FromRoute] Guid id,UpdateRequestDTO updateRequest)
         {
             var request = new Category

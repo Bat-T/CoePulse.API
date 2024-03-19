@@ -10,24 +10,33 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Admin
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" [routerLink]="['/admin/categories']">Category List</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" [routerLink]="['/admin/blogposts']">BlogPost</a></li>
-            <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-          </ul>
-        </li>
+        <ng-container *ngIf="user !==undefined && user?.roles?.includes('Writer') && user?.roles?.includes('Admin')">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Admin
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" [routerLink]="['/admin/categories']">Category List</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" [routerLink]="['/admin/blogposts']">BlogPost</a></li>
+              <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+            </ul>
+          </li>
+        </ng-container>
       </ul>
 
       <div class="d-flex">
-        <a class="btn btn-outline-primary mr-2" [routerLink]="['/login']">Login</a>
-        <a class="btn btn-primary" [routerLink]="['/register']">Register</a>
+        <ng-container *ngIf="user === undefined;else showlogout">
+          <a class="btn btn-outline-primary mr-2" [routerLink]="['/login']">Login</a>
+        </ng-container>
+        <ng-template #showlogout>
+          <div class="d-flex align-items-center">
+            <span>{{user?.email }}</span>
+            <button class="btn btn-primary ms-3" (click)="onLogout()">Logout</button>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

@@ -5,6 +5,7 @@ import { AddBlogPost } from '../models/add-blog-post-model';
 import { Observable } from 'rxjs';
 import { BlogPost } from '../models/blog-post-model';
 import { UpdateBlogPost } from '../models/update-blog-post-model';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,11 @@ import { UpdateBlogPost } from '../models/update-blog-post-model';
 export class BlogPostService {
 
   apiUrl = environment.apiBaseUrl;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private cookie:CookieService) { }
 
   
   addCategory(model: AddBlogPost): Observable<BlogPost>{
-    return this.http.post<BlogPost>(this.apiUrl+'/api/BlogPosts',model);
+    return this.http.post<BlogPost>(this.apiUrl+'/api/BlogPosts'+'?addAuth=true',model);
   }
 
   getAllCategory(): Observable<BlogPost[]>{
@@ -27,11 +28,11 @@ export class BlogPostService {
   }
   
   updateBlogPostDetail(id:string, updateblogPostModel: UpdateBlogPost): Observable<BlogPost>{
-    return this.http.put<BlogPost>(this.apiUrl+'/api/BlogPosts/'+id,updateblogPostModel);
+    return this.http.put<BlogPost>(this.apiUrl+'/api/BlogPosts/'+id+'?addAuth=true',updateblogPostModel);
   }
 
   deleteBlogPost(id:string):Observable<BlogPost>{
-    return this.http.delete<BlogPost>(this.apiUrl+'/api/BlogPosts/'+id);
+    return this.http.delete<BlogPost>(this.apiUrl+'/api/BlogPosts/'+id+'?addAuth=true');
   }
 
   getBlogPostByUrlHandle(urlHandle: string): Observable<BlogPost>{
