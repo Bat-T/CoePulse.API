@@ -47,6 +47,26 @@ namespace CoePulse.API.Controllers
             return Ok(blogImageDTO);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var allImages = await imageRepository.GetAllAsync();
+            if (allImages.Count() == 0)
+            {
+                return NoContent();
+            }
+            var convertedResult = allImages.Select(x => new BlogImageDTO
+            {
+                Id = x.Id,
+                Title = x.Title,
+                FileName = x.FileName,
+                FileExtension = x.FileExtension,
+                DateCreated = x.DateCreated,
+                Url = x.Url
+            });
+            return Ok(convertedResult);
+        }
+
         private void validateFormFile(IFormFile file)
         {
             /* should check null and check valid extension*/

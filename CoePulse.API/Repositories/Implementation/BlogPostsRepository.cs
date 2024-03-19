@@ -54,5 +54,12 @@ namespace CoePulse.API.Repositories.Implementation
             await _context.SaveChangesAsync();
             return blogPost;
         }
+
+        public async Task<BlogPost?> GetByUrlHandleAsync(string urlHandle)
+        {
+            var existingBlogPost= await _context.BlogPosts.Include(x=>x.Categories).FirstOrDefaultAsync(x => x.UrlHandle == urlHandle);
+            if(existingBlogPost is null) { return null; }
+            return existingBlogPost;
+        }
     }
 }

@@ -12,5 +12,6 @@ namespace CoePulse.API.Repositories.Interface
         public Task<BlogPost?> UpdateAsync(BlogPost request);
 
         public Task<BlogPost?> DeleteAsync(Guid id);
+        public Task<BlogPost?> GetByUrlHandleAsync(string urlHandle);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CoePulse.API.Models.Domain;
 using CoePulse.API.Models.DTO;
 using CoePulse.API.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace CoePulse.API.Controllers
 
         [HttpPost]
         [Produces<BlogPostDTO>]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto request)
         {
             var blogpostRequest = new BlogPost
@@ -98,6 +100,7 @@ namespace CoePulse.API.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
+        [Authorize]
         public async Task<IActionResult> GetAsync([FromRoute] Guid id)
         {
             var blogPost = await blogPostsRepository.GetAsync(id);
@@ -117,8 +120,31 @@ namespace CoePulse.API.Controllers
             });
         }
 
+        //GET: api/BlogPosts/{urlHandle}
+        [HttpGet]
+        [Route("{urlHandle}")]
+        public async Task<IActionResult> GetByUrlHandleAsync([FromRoute] string urlHandle)
+        {
+            var blogPost = await blogPostsRepository.GetByUrlHandleAsync(urlHandle);
+            if (blogPost == null) { return NotFound(); }
+            return Ok(new BlogPostDTO
+            {
+                Id = blogPost.Id,
+                Author = blogPost.Author,
+                Content = blogPost.Content,
+                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                IsVisible = blogPost.IsVisible,
+                PublishedDate = blogPost.PublishedDate,
+                ShortDescription = blogPost.ShortDescription,
+                Title = blogPost.Title,
+                UrlHandle = blogPost.UrlHandle,
+                Categories = blogPost.Categories == null ? new List<CategoryDTO>() : blogPost.Categories.Select(x => new CategoryDTO { Id = x.Id, Name = x.Name, UrlHandle = x.UrlHandle }).ToList()
+            });
+        }
+
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateBlogPostRequestDto request)
         {
             var blogPost = new BlogPost
@@ -167,6 +193,7 @@ namespace CoePulse.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
         {
             var deletedBlogPost = await blogPostsRepository.DeleteAsync(id);

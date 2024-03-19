@@ -9,6 +9,7 @@ using CoePulse.API.Data;
 using CoePulse.API.Models.Domain;
 using CoePulse.API.Models.DTO;
 using CoePulse.API.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoePulse.API.Controllers
 {
@@ -26,6 +27,7 @@ namespace CoePulse.API.Controllers
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<ActionResult<CategoryDTO>> PostCategory(CreateCategoryRequestDTO request)
         {
             var category = new Category { Name = request.Name, UrlHandle = request.UrlHandle };
@@ -63,6 +65,7 @@ namespace CoePulse.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<ActionResult<CategoryDTO>> EditCategory([FromRoute] Guid id,UpdateRequestDTO updateRequest)
         {
             var request = new Category
@@ -82,6 +85,7 @@ namespace CoePulse.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<ActionResult<CategoryDTO>> DeleteCategory([FromRoute] Guid id)
         {
             

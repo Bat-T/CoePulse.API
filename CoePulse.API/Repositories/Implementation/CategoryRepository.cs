@@ -15,7 +15,7 @@ namespace CoePulse.API.Repositories.Implementation
             _context = context;
         }
 
-        public async Task<Category> CreateAsync(Category category)
+        public async Task<Category?> CreateAsync(Category category)
         {
             if (category == null) { return null; }
             _context.Categories.Add(category);
@@ -24,7 +24,7 @@ namespace CoePulse.API.Repositories.Implementation
             return category;
         }
 
-        public async Task<Category>? UpdateCategory(Category request)
+        public async Task<Category?> UpdateCategory(Category request)
         {
             var categ = await _context.Categories.FirstOrDefaultAsync(x => x.Id == request.Id);
             if (categ == null)
@@ -39,7 +39,7 @@ namespace CoePulse.API.Repositories.Implementation
             return await _context.Categories.ToListAsync();
         }
 
-        public async Task<Category> GetCategoryByID(Guid id)
+        public async Task<Category?> GetCategoryByID(Guid id)
         {
             return await _context.Categories.Where(x => x.Id == id).SingleOrDefaultAsync();
 
